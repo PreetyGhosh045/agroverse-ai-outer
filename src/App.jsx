@@ -1,6 +1,5 @@
 import './App.css'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   LineChart,
   Line,
@@ -17,6 +16,7 @@ import 'leaflet-draw/dist/leaflet.draw.css'
 import 'leaflet-draw'
 import FarmDraw from './FarmDraw'
 import Login from './components/Login/Login'
+import LandingPage from './components/LandingPage/LandingPage' // 🟢 ১. LandingPage ইম্পোর্ট করা হলো
 
 const cropCategories = [
   {
@@ -90,8 +90,10 @@ const cropCategories = [
 ];
 
 function App() {
-  // 🟢 ১. লগইন স্ট্যাটাস চেক করার জন্য নতুন স্টেট
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  // 🟢 ২. পেজ নেভিগেশন কন্ট্রোল করার জন্য নতুন স্টেট ('home', 'login', 'dashboard')
+  const [currentPage, setCurrentPage] = useState('home')
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const dropdownRef = useRef(null)
 
   const [activeMenu, setActiveMenu] = useState('dashboard')
   const [profileMessage, setProfileMessage] = useState('')
@@ -117,10 +119,19 @@ function App() {
   const [soilPHLoading, setSoilPHLoading] = useState(false);
   const [soilPHError, setSoilPHError] = useState("");
   const [temperature, setTemperature] = useState('Awaiting Data')
+  const [rainfall, setRainfall] = useState('Awaiting Data')
+  const [humidity, setHumidity] = useState('Awaiting Data')
+  const [solarRadiation, setSolarRadiation] = useState('Awaiting Data')
+  const [climateMessage, setClimateMessage] = useState('')
+  const [climateGraphData, setClimateGraphData] = useState([])
+  const [selectedMonth, setSelectedMonth] = useState('all')
+  const [dailyClimateData, setDailyClimateData] = useState([])
+
+  const latitude = 23.3316
+  const longitude = 86.3759
 
   useEffect(() => {
     const savedClimate = localStorage.getItem('agroverseClimate')
-
     if (savedClimate) {
       const climate = JSON.parse(savedClimate)
       setTemperature(climate.temperature)
@@ -130,19 +141,10 @@ function App() {
     }
   }, [])
 
-  const [rainfall, setRainfall] = useState('Awaiting Data')
-  const [humidity, setHumidity] = useState('Awaiting Data')
-  const [solarRadiation, setSolarRadiation] = useState('Awaiting Data')
-  const [climateMessage, setClimateMessage] = useState('')
-  const latitude = 23.3316
-  const longitude = 86.3759
-
   useEffect(() => {
     const savedFarm = localStorage.getItem('agroverseFarm')
-
     if (savedFarm) {
       const farm = JSON.parse(savedFarm)
-
       setFarmName(farm.farmName || '')
       setFarmLocation(farm.farmLocation || '')
       setLandArea(farm.landArea || '')
@@ -152,7 +154,6 @@ function App() {
       setFollowingCrop(farm.followingCrop || 'Vegetables')
     }
     const savedRotation = localStorage.getItem('agroverseRotation')
-
     if (savedRotation) {
       const rotation = JSON.parse(savedRotation)
       setNextCrop(rotation.nextCrop)
@@ -160,6 +161,23 @@ function App() {
       setRotationSaved(true)
     }
   }, [])
+
+  // Dropdown-এর বাইরে ক্লিক করলে মেনু বন্ধ করার ব্যবস্থা
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // 🟢 ৩. লগআউট করলে আবার হোম পেজে ফিরিয়ে নিয়ে যাওয়া
+  const handleLogout = () => {
+    setCurrentPage('home')
+    setIsProfileOpen(false)
+  }
 
   const askAdvisor = () => {
     setIsAdvisorLoading(true)
@@ -176,10 +194,6 @@ function App() {
     )
     setIsAdvisorLoading(false)
   }
-
-  const [climateGraphData, setClimateGraphData] = useState([])
-  const [selectedMonth, setSelectedMonth] = useState('all')
-  const [dailyClimateData, setDailyClimateData] = useState([])
 
   const getClimateData = async () => {
     try {
@@ -250,7 +264,7 @@ function App() {
           ? values.solar.reduce((a, b) => a + b, 0) / values.solar.length
           : 0
       }))
-      
+
       setClimateGraphData(graphData)
       const dailyData = dates.map((date) => ({
         date,
@@ -267,14 +281,6 @@ function App() {
           .at(-1)
 
       setTemperature(`${latestValue(parameters.T2M)} °C`)
-      localStorage.setItem(
-        'agroverseClimate',
-        JSON.stringify({
-          temperature: `${latestValue(parameters.T2M)} °C`,
-          humidity: `${latestValue(parameters.RH2M)} %`,
-          solarRadiation: `${latestValue(parameters.ALLSKY_SFC_SW_DWN)} kWh/m²/day`,
-        }),
-      )
       setHumidity(`${latestValue(parameters.RH2M)} %`)
       setSolarRadiation(
         `${latestValue(parameters.ALLSKY_SFC_SW_DWN)} kWh/m²/day`
@@ -302,7 +308,6 @@ function App() {
       setClimateMessage(
         `NASA climate data loaded successfully! Date: ${endDate.toLocaleDateString('en-GB')}`
       )
-     
     } catch (error) {
       setClimateMessage('Unable to load climate data. Please try again.')
     }
@@ -367,11 +372,19 @@ function App() {
 
   return (
     <div className="app">
-      {/* 🟢 ২. যদি লগইন না করা থাকে (!isLoggedIn), তবে শুধু Login পেজ দেখাবে। 
-          লগইন বাটনে চাপ দিলে `onLogin` প্রপসের মাধ্যমে `isLoggedIn` true হয়ে যাবে এবং ড্যাশবোর্ড স্ক্রিন খুলবে। */}
-      {!isLoggedIn ? (
-        <Login onLogin={() => setIsLoggedIn(true)} />
-      ) : (
+      {/* 🟢 ৪. পেজ সুইচিং লজিক */}
+      {currentPage === 'home' && (
+        <LandingPage 
+          onGetStarted={() => setCurrentPage('login')} 
+          onLoginClick={() => setCurrentPage('login')} 
+        />
+      )}
+
+      {currentPage === 'login' && (
+        <Login onLogin={() => setCurrentPage('dashboard')} />
+      )}
+
+      {currentPage === 'dashboard' && (
         <>
           <aside className="sidebar">
             <h2>🌱 AGROVERSE AI</h2>
@@ -413,6 +426,95 @@ function App() {
           </aside> 
 
           <main className="dashboard">
+            {/* Header / Profile Dropdown Section */}
+            <header className="dashboard-header" style={{ display: 'flex', justifyContent: 'flex-end', position: 'relative', marginBottom: '20px' }}>
+              <div className="profile-container" ref={dropdownRef} style={{ position: 'relative' }}>
+                <button 
+                  className="profile-icon-btn" 
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  style={{
+                    background: '#22c55e',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '45px',
+                    height: '45px',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                  }}
+                >
+                  👨‍🌾
+                </button>
+
+                {isProfileOpen && (
+                  <div 
+                    className="profile-dropdown"
+                    style={{
+                      position: 'absolute',
+                      right: 0,
+                      top: '55px',
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                      width: '220px',
+                      zIndex: 1000,
+                      padding: '12px',
+                      color: '#1e293b'
+                    }}
+                  >
+                    <div style={{ paddingBottom: '10px', borderBottom: '1px solid #f1f5f9' }}>
+                      <p style={{ margin: 0, fontWeight: 'bold', fontSize: '15px' }}>
+                        🌾 {farmName || 'My Farm'}
+                      </p>
+                      <small style={{ color: '#64748b' }}>
+                        📍 {farmLocation || 'Purulia, WB'}
+                      </small>
+                    </div>
+                    <div style={{ paddingTop: '8px' }}>
+                      <a 
+                        href="#farm-profile" 
+                        onClick={() => setIsProfileOpen(false)}
+                        style={{
+                          display: 'block',
+                          padding: '8px 10px',
+                          color: '#334155',
+                          textDecoration: 'none',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          marginBottom: '4px',
+                          transition: 'background 0.2s'
+                        }}
+                      >
+                        🌱 View Farm Profile
+                      </a>
+                      <button 
+                        onClick={handleLogout}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '8px 10px',
+                          background: '#ef4444',
+                          color: '#ffffff',
+                          border: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: 'bold'
+                        }}
+                      >
+                        🚪 Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </header>
+
             <section className="welcome">
               <div className="welcome-text">
                 <h1>🌱 Welcome back, Farmer!</h1>
