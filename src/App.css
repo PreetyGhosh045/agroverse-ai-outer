@@ -33,9 +33,10 @@ body {
 }
 
 .dashboard {
-  max-width: 1200px;
-  margin: auto;
-  padding: 55px 25px;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 55px 25px;
 }
 
 .welcome {
@@ -819,9 +820,8 @@ body {
   font-weight: 500;
 }
 .crop-recommendation {
-  padding: 35px;
+  padding: 35px 0;
 }
-
 .crop-recommendation > h2 {
   font-size: 28px;
   color: #14532d;
