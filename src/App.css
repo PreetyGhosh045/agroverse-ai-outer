@@ -198,22 +198,23 @@ body {
   margin-bottom: 22px;
 }
 
-.recommendation-selection-group {
-  margin: 20px 0 28px;
+.crop-recommendation label {
+  display: block;
+  color: #20613d;
+  font-weight: bold;
+  margin: 18px 0 8px;
 }
 
-.recommendation-selection-group h4 {
-  margin-bottom: 12px;
-  color: #2e7d32;
+.crop-recommendation select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #dcebe0;
+  border-radius: 8px;
+  background: white;
+  font-size: 15px;
 }
 
-.recommendation-selection-count {
-  margin: 10px 0 0 !important;
-  padding: 10px 0 !important;
-  border-bottom: none !important;
-}
-
-.recommendation-submit {
+.crop-recommendation button {
   margin-top: 22px;
   padding: 13px 22px;
   background: #20613d;
@@ -222,38 +223,11 @@ body {
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
 }
 
-.recommendation-submit:hover:not(:disabled) {
+.crop-recommendation button:hover {
   background: #123d2a;
-  transform: translateY(-1px);
 }
-
-.recommendation-submit:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.recommendation-selection-group .crop-grid {
-  gap: 10px;
-}
-
-@media (max-width: 650px) {
-  .crop-recommendation .profile-card {
-    padding: 20px;
-  }
-
-  .recommendation-selection-group .crop-option {
-    padding: 9px 12px;
-    font-size: 14px;
-  }
-
-  .recommendation-submit {
-    width: 100%;
-  }
-}
-
 .recommendation-result {
   margin-top: 25px;
   padding: 22px;
@@ -1200,14 +1174,14 @@ body {
   padding: 10px 15px;
   border: 2px solid #c8e6c9;
   border-radius: 12px;
-  background: #f5fff5;
+  background: transparent;
   color: #245b28;
   cursor: pointer;
   transition: 0.2s;
 }
 
 .crop-option:hover {
-  background: #e8f5e9;
+  background: rgba(232, 245, 233, 0.45);
   transform: translateY(-2px);
 }
 
@@ -1298,4 +1272,23 @@ body {
 .crop-rotation .rotation-primary-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+/* Fix selection buttons in Crop Recommendation */
+.crop-recommendation .crop-option,
+.crop-recommendation .season-option {
+  background: transparent !important;
+  color: #245b28 !important;
+  border: 2px solid #c8e6c9 !important;
+}
+
+.crop-recommendation .crop-option:hover,
+.crop-recommendation .season-option:hover {
+  background: #e8f5e9 !important;
+}
+
+.crop-recommendation .crop-option.selected,
+.crop-recommendation .season-option.selected {
+  background: #2e7d32 !important;
+  color: white !important;
+  border-color: #1b5e20 !important;
 }
