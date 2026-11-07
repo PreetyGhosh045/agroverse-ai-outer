@@ -304,8 +304,11 @@ body {
 }
 .ai-advisor {
   margin-top: 50px;
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
 }
-
 .ai-advisor > h2 {
   color: #20613d;
   font-size: 30px;
