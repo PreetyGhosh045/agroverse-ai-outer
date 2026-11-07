@@ -20,74 +20,51 @@ import LandingPage from './components/LandingPage/LandingPage' // 🟢 ১. Land
 
 const cropCategories = [
   {
-    name: "🌾 Cereals / দানাশস্য",
+    name: "🌱 Crops",
     crops: [
-      { en: "Rice", bn: "ধান" },
-      { en: "Wheat", bn: "গম" },
-      { en: "Maize", bn: "ভুট্টা" },
-      { en: "Millet", bn: "বাজরা" },
-      { en: "Barley", bn: "যব" },
-      { en: "Sorghum", bn: "জোয়ার" }
-    ]
-  },
-  {
-    name: "🫘 Pulses / ডাল",
-    crops: [
-      { en: "Lentil", bn: "মসুর" },
-      { en: "Chickpea", bn: "ছোলা" },
-      { en: "Green Gram", bn: "মুগ" },
-      { en: "Black Gram", bn: "উড়দ" },
-      { en: "Pea", bn: "মটর" }
-    ]
-  },
-  {
-    name: "🛢️ Oilseeds / তৈলবীজ",
-    crops: [
-      { en: "Mustard", bn: "সরিষা" },
-      { en: "Groundnut", bn: "চিনাবাদাম" },
-      { en: "Sesame", bn: "তিল" },
-      { en: "Sunflower", bn: "সূর্যমুখী" },
-      { en: "Soybean", bn: "সয়াবিন" }
-    ]
-  },
-  {
-    name: "🥬 Vegetables / সবজি",
-    crops: [
-      { en: "Potato", bn: "আলু" },
-      { en: "Onion", bn: "পেঁয়াজ" },
-      { en: "Tomato", bn: "টমেটো" },
-      { en: "Brinjal", bn: "বেগুন" },
-      { en: "Cucumber", bn: "শসা" },
-      { en: "Pointed Gourd", bn: "পটল" },
-      { en: "Cauliflower", bn: "ফুলকপি" },
-      { en: "Chili", bn: "লঙ্কা" },
-      { en: "Carrot", bn: "গাজর" },
-      { en: "Cabbage", bn: "বাঁধাকপি" },
-      { en: "Okra", bn: "ঢেঁড়স" },
-      { en: "Radish", bn: "মুলা" },
-      { en: "Spinach", bn: "পালং" },
-      { en: "Pumpkin", bn: "কুমড়ো" },
-      { en: "Watermelon", bn: "তরমুজ" }
-    ]
-  },
-  {
-    name: "🍎 Fruits / ফল",
-    crops: [
-      { en: "Mango", bn: "আম" },
-      { en: "Banana", bn: "কলা" },
-      { en: "Papaya", bn: "পেঁপে" },
-      { en: "Guava", bn: "পেয়ারা" },
-      { en: "Pineapple", bn: "আনারস" }
-    ]
-  },
-  {
-    name: "🧵 Fiber Crops / আঁশ ফসল",
-    crops: [
-      { en: "Jute", bn: "পাট" },
-      { en: "Cotton", bn: "তুলা" }
+      { en: "Rice", emoji: "🍚" },
+      { en: "Maize", emoji: "🌽" },
+      { en: "Ragi", emoji: "🌾" },
+      { en: "Horse Gram", emoji: "🫘" },
+      { en: "Moth Bean", emoji: "🫘" },
+      { en: "Peas / Beans", emoji: "🫛" },
+      { en: "Safflower", emoji: "🌼" },
+      { en: "Potato", emoji: "🥔" },
+      { en: "Tomato", emoji: "🍅" },
+      { en: "Brinjal", emoji: "🍆" },
+      { en: "Cucurbits", emoji: "🥒" },
+      { en: "Cabbage", emoji: "🥬" },
+      { en: "Cauliflower", emoji: "🥦" },
+      { en: "Bhindi", emoji: "🌿" },
+      { en: "Onion", emoji: "🧅" }
     ]
   }
 ];
+
+
+const recommendationCrops = [
+  { name: "Rice", emoji: "🍚" },
+  { name: "Maize", emoji: "🌽" },
+  { name: "Ragi", emoji: "🌾" },
+  { name: "Horse Gram", emoji: "🫘" },
+  { name: "Moth Bean", emoji: "🫘" },
+  { name: "Peas / Beans", emoji: "🫛" },
+  { name: "Safflower", emoji: "🌼" },
+  { name: "Potato", emoji: "🥔" },
+  { name: "Tomato", emoji: "🍅" },
+  { name: "Brinjal", emoji: "🍆" },
+  { name: "Cucurbits", emoji: "🥒" },
+  { name: "Cabbage", emoji: "🥬" },
+  { name: "Cauliflower", emoji: "🥦" },
+  { name: "Bhindi", emoji: "🌿" },
+  { name: "Onion", emoji: "🧅" }
+]
+
+const recommendationSeasons = [
+  { name: "Kharif", emoji: "🌧️" },
+  { name: "Rabi", emoji: "❄️" },
+  { name: "Zaid", emoji: "☀️" }
+]
 
 function App() {
   // 🟢 ২. পেজ নেভিগেশন কন্ট্রোল করার জন্য নতুন স্টেট ('home', 'login', 'dashboard')
@@ -97,8 +74,8 @@ function App() {
 
   const [activeMenu, setActiveMenu] = useState('dashboard')
   const [profileMessage, setProfileMessage] = useState('')
-  const [soil, setSoil] = useState('')
-  const [water, setWater] = useState('')
+  const [recommendationSeason, setRecommendationSeason] = useState('')
+  const [selectedRecommendationCrops, setSelectedRecommendationCrops] = useState([])
   const [recommendation, setRecommendation] = useState('')
   const [rotationSaved, setRotationSaved] = useState(false)
   const [isLoadingRecommendation, setIsLoadingRecommendation] = useState(false)
@@ -113,6 +90,7 @@ function App() {
   const [nextCrop, setNextCrop] = useState('Pulses')
   const [followingCrop, setFollowingCrop] = useState('Vegetables')
   const [selectedCrops, setSelectedCrops] = useState([]);
+  const [selectedRotationSeasons, setSelectedRotationSeasons] = useState([]);
   const [rotationResult, setRotationResult] = useState(null);
   const [soilPH, setSoilPH] = useState("");
   const [soilPHResult, setSoilPHResult] = useState(null);
@@ -315,22 +293,18 @@ function App() {
 
   const getRecommendation = async () => {
     setIsLoadingRecommendation(true)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    if (!soil || !water) {
-      setRecommendation('⚠️ Please select both Soil Type and Water Availability before getting recommendations.')
+
+    if (!recommendationSeason || selectedRecommendationCrops.length === 0) {
+      setRecommendation('⚠️ Please select one season and at least one crop before getting recommendations.')
       setIsLoadingRecommendation(false)
       return
     }
 
-    if (soil === 'Loamy Soil' && water === 'High') {
-      setRecommendation('Rice, Maize and Vegetables may be suitable.')
-    } else if (soil === 'Sandy Soil' && water === 'Low') {
-      setRecommendation('Millet and Pulses may be suitable.')
-    } else if (soil === 'Clay Soil') {
-      setRecommendation('Rice and Wheat may be suitable.')
-    } else {
-      setRecommendation('Maize, Pulses and suitable seasonal crops may be considered.')
-    }
+    // Frontend-only for now. The backend/model can consume these values later.
+    await new Promise(resolve => setTimeout(resolve, 600))
+    setRecommendation(
+      `Recommendation request ready for ${recommendationSeason}: ${selectedRecommendationCrops.join(', ')}`
+    )
     setIsLoadingRecommendation(false)
   }
 
@@ -768,35 +742,83 @@ function App() {
 
             <section className="crop-recommendation">
               <h2 id="crop-recommendation">Crop Recommendation</h2>
-              <p>Discover crops suitable for your farm.</p>
+              <p>Choose a season and the crops you are interested in growing.</p>
 
               <div className="profile-card">
                 <h3>🌾 Find the Right Crop</h3>
 
-                <label>Soil Type</label>
-                <select value={soil} onChange={(e) => setSoil(e.target.value)}>
-                  <option value="">Select Soil Type</option>
-                  <option>Clay Soil</option>
-                  <option>Sandy Soil</option>
-                  <option>Loamy Soil</option>
-                  <option>Silty Soil</option>
-                </select>
+                <div className="crop-category recommendation-selection-group">
+                  <h4>🌤️ Select Season</h4>
+                  <div className="crop-grid">
+                    {recommendationSeasons.map((season) => (
+                      <button
+                        key={season.name}
+                        type="button"
+                        className={
+                          recommendationSeason === season.name
+                            ? "crop-option selected"
+                            : "crop-option"
+                        }
+                        onClick={() => {
+                          setRecommendationSeason((prev) =>
+                            prev === season.name ? "" : season.name
+                          )
+                          setRecommendation('')
+                        }}
+                        aria-pressed={recommendationSeason === season.name}
+                      >
+                        {recommendationSeason === season.name ? "✅ " : `${season.emoji} `}
+                        {season.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                <label>Water Availability</label>
-                <select value={water} onChange={(e) => setWater(e.target.value)}>
-                  <option value="">Select Water Availability</option>
-                  <option>Low</option>
-                  <option>Medium</option>
-                  <option>High</option>
-                </select>
+                <div className="crop-category recommendation-selection-group">
+                  <h4>🌱 Select Crops</h4>
+                  <div className="crop-grid">
+                    {recommendationCrops.map((crop) => (
+                      <button
+                        key={crop.name}
+                        type="button"
+                        className={
+                          selectedRecommendationCrops.includes(crop.name)
+                            ? "crop-option selected"
+                            : "crop-option"
+                        }
+                        onClick={() => {
+                          setSelectedRecommendationCrops((prev) =>
+                            prev.includes(crop.name)
+                              ? prev.filter((item) => item !== crop.name)
+                              : [...prev, crop.name]
+                          )
+                          setRecommendation('')
+                        }}
+                        aria-pressed={selectedRecommendationCrops.includes(crop.name)}
+                      >
+                        {selectedRecommendationCrops.includes(crop.name) ? "✅ " : `${crop.emoji} `}
+                        {crop.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                <button onClick={getRecommendation} disabled={isLoadingRecommendation}>
+                <p className="recommendation-selection-count">
+                  Selected Crops: <strong>{selectedRecommendationCrops.length}</strong>
+                </p>
+
+                <button
+                  type="button"
+                  className="recommendation-submit"
+                  onClick={getRecommendation}
+                  disabled={isLoadingRecommendation}
+                >
                   {isLoadingRecommendation ? 'Loading...' : 'Get Crop Recommendation'}
                 </button>
 
                 {recommendation && (
                   <div className={`recommendation-result ${recommendation.startsWith('⚠️') ? 'recommendation-warning' : ''}`}>
-                    <h3>🌱 Recommended Crops</h3>
+                    <h3>🌱 Recommendation Status</h3>
                     <p>{recommendation}</p>
                   </div>
                 )}
@@ -805,15 +827,45 @@ function App() {
 
             <section className="crop-rotation">
               <h2 id="crop-rotation">🌱 AI Crop Rotation Planner</h2>
-              <p>Choose 3 or more crops and get a smart rotation plan.</p>
+              <p>Select one, two, or all three seasons and choose the crops you want to include in your rotation plan.</p>
 
               <div className="profile-card">
-                <h3>🌾 Select Crops (English + বাংলা)</h3>
+                <h3>🌤️ Select Seasons</h3>
+
+                <div className="crop-grid">
+                  {recommendationSeasons.map((season) => (
+                    <button
+                      key={season.name}
+                      type="button"
+                      className={
+                        selectedRotationSeasons.includes(season.name)
+                          ? "crop-option selected"
+                          : "crop-option"
+                      }
+                      onClick={() =>
+                        setSelectedRotationSeasons((prev) =>
+                          prev.includes(season.name)
+                            ? prev.filter((item) => item !== season.name)
+                            : [...prev, season.name]
+                        )
+                      }
+                      aria-pressed={selectedRotationSeasons.includes(season.name)}
+                    >
+                      {selectedRotationSeasons.includes(season.name) ? "✅ " : `${season.emoji} `}
+                      {season.name}
+                    </button>
+                  ))}
+                </div>
+
+                <p>
+                  Selected Seasons: <strong>{selectedRotationSeasons.length}</strong>
+                </p>
+
+                <h3>🌾 Select Crops</h3>
 
                 {cropCategories.map((category) => (
                   <div key={category.name} className="crop-category">
                     <h4>{category.name}</h4>
-
                     <div className="crop-grid">
                       {category.crops.map((crop) => (
                         <button
@@ -831,9 +883,10 @@ function App() {
                                 : [...prev, crop.en]
                             )
                           }
+                          aria-pressed={selectedCrops.includes(crop.en)}
                         >
-                          {selectedCrops.includes(crop.en) ? "✅ " : "🌱 "}
-                          {crop.en} ({crop.bn})
+                          {selectedCrops.includes(crop.en) ? "✅ " : `${crop.emoji} `}
+                          {crop.en}
                         </button>
                       ))}
                     </div>
@@ -845,19 +898,25 @@ function App() {
                 </p>
 
                 <button
+                  className="rotation-primary-button"
                   type="button"
                   onClick={() => {
+                    if (selectedRotationSeasons.length === 0) {
+                      alert("Please select at least one season!");
+                      return;
+                    }
+
                     if (selectedCrops.length < 3) {
                       alert("Please select at least 3 crops!");
                       return;
                     }
 
                     setRotationResult(
-                      "Selected crops: " + selectedCrops.join(" → ")
+                      `Seasons: ${selectedRotationSeasons.join(" → ")} | Crops: ${selectedCrops.join(" → ")}`
                     );
                   }}
                 >
-                  🤖 Generate Rotation Plan
+                   Generate Rotation Plan
                 </button>
 
                 {rotationResult && (
