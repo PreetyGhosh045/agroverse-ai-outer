@@ -375,18 +375,18 @@ function App() {
                 🌾 Crop Recommendation
               </a>
               <a
-                href="#climate-insights"
-                onClick={() => setActiveMenu('climate-insights')}
-                className="active"
-              >
-                🌦️ Climate Insights
-              </a>
-              <a
                 href="#crop-rotation"
                 onClick={() => setActiveMenu('crop-rotation')}
                 className="active"
               >
                 🔄 Crop Rotation
+              </a>
+              <a
+                href="#climate-insights"
+                onClick={() => setActiveMenu('climate-insights')}
+                className="active"
+              >
+                🌦️ Climate Insights
               </a>
               <a href="#farm-map" className="active">
                 📍 Farm Map
