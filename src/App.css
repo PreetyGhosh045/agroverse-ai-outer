@@ -1292,3 +1292,6 @@ body {
   color: white !important;
   border-color: #1b5e20 !important;
 }
+.crop-rotation .profile-card > .crop-grid + h3 {
+  margin-top: 24px;
+}
